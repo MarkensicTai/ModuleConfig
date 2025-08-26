@@ -1,0 +1,33 @@
+plugins {
+    alias(libs.plugins.plugin.publish)
+    alias(libs.plugins.kotlin.jvm)
+    id("groovy")
+}
+
+dependencies {
+    compileOnly gradleApi()
+    compileOnly localGroovy()
+    compileOnly(libs.gradlePlugin.android)
+    implementation(libs.gradlePlugin.kotlin.jvm)
+    implementation(libs.squareup.javapoet)
+}
+
+java {
+    sourceCompatibility = JavaVersion.VERSION_11
+    targetCompatibility = JavaVersion.VERSION_11
+}
+
+tasks.withType(org.jetbrains.kotlin.gradle.tasks.KotlinCompile).configureEach {
+    kotlinOptions.jvmTarget = "11"
+}
+
+gradlePlugin {
+    plugins {
+        moduleConfigGenerator {
+            id = 'com.moduleconfig.generator'
+            implementationClass = 'com.moduleconfig.generator.ModuleConfigGeneratorPlugin'
+            displayName = 'ModuleConfig Generator Plugin'
+            description = 'A plugin that generates BuildConfig-like classes with custom fields'
+        }
+    }
+}

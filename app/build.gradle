@@ -1,0 +1,192 @@
+plugins {
+  alias(libs.plugins.android.application)
+  alias(libs.plugins.kotlin.android)
+  id 'com.moduleconfig.generator'
+}
+
+android {
+  namespace 'org.markensic.example'
+  compileSdk 34
+
+  defaultConfig {
+    applicationId "org.markensic.example"
+    minSdk 26
+    targetSdk 34
+    versionCode 1
+    versionName "1.0"
+
+    testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+  }
+
+  buildTypes {
+    release {
+      minifyEnabled true
+      proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+    }
+  }
+  compileOptions {
+    sourceCompatibility JavaVersion.VERSION_11
+    targetCompatibility JavaVersion.VERSION_11
+  }
+  kotlinOptions {
+    jvmTarget = '11'
+  }
+}
+
+// 配置 BuildConfig 生成器
+moduleConfigGenerator {
+  packageName = 'com.example.buildconfig.generated'
+  className = 'AppConfig'
+
+  // ========== 基础数据类型测试 ==========
+  stringField 'API_BASE_URL', 'https://api.example.com', 'API 基础地址'
+  stringField 'APP_NAME', 'BuildConfig Example'
+  stringField 'EMPTY_STRING', '', '空字符串测试'
+  stringField 'SPECIAL_CHARS', 'Hello "World" \n\t\r', '特殊字符测试'
+  
+  intField 'API_VERSION', 1, 'API 版本号'
+  intField 'ZERO_VALUE', 0, '零值测试'
+  intField 'NEGATIVE_VALUE', -100, '负数测试'
+  intField 'MAX_INT', Integer.MAX_VALUE, '最大整数值'
+  
+  booleanField 'DEBUG_MODE', true, '是否开启调试模式'
+  booleanField 'PRODUCTION_MODE', false, '生产模式'
+  
+  longField 'BUILD_TIMESTAMP', System.currentTimeMillis(), '构建时间戳'
+  longField 'LARGE_NUMBER', 9223372036854775807L, '长整型最大值'
+  
+  floatField 'APP_VERSION_FLOAT', 1.0f, '浮点版本号'
+  floatField 'PRECISION_FLOAT', 3.14159f, '精度测试'
+  
+  doubleField 'PI_VALUE', 3.14159265359, 'PI 值'
+  doubleField 'SCIENTIFIC_NOTATION', 1.23e-4, '科学计数法'
+
+  // ========== List 类型测试 ==========
+  // 基础 List 测试
+  listField 'SIMPLE_INT_LIST', 'Integer', '1, 2, 3, 4, 5'
+  listField 'SIMPLE_STRING_LIST', 'String', '"apple", "banana", "cherry"'
+  listField 'BOOLEAN_LIST', 'Boolean', 'true, false, true'
+  listField 'FLOAT_LIST', 'Float', '1.1f, 2.2f, 3.3f'
+  listField 'DOUBLE_LIST', 'Double', '1.11, 2.22, 3.33'
+  
+  // 包含特殊字符的 List
+  listField 'SPECIAL_STRING_LIST', 'String', '"COUNT to 1", "VERSION_COUNT to 2", "TIME_COUNT to 3"'
+  listField 'QUOTED_LIST', 'String', '"Hello \\"World\\"", "Line1\\nLine2", "Tab\\tSeparated"'
+  
+  // 单元素和空 List 测试
+  listField 'SINGLE_ELEMENT_LIST', 'String', '"only_one"'
+  listField 'MIXED_QUOTES_LIST', 'String', '"unquoted", "quoted", "another_unquoted"'
+  
+  // 数值 List 边界测试
+  listField 'NEGATIVE_INT_LIST', 'Integer', '-1, -2, -3, 0, 1, 2, 3'
+  listField 'LARGE_LONG_LIST', 'Long', '1000000000L, 2000000000L, 3000000000L'
+
+  // ========== Map 类型测试 ==========
+  // 基础 Map 测试
+  mapField 'STRING_INT_MAP', 'String', 'Integer', '"count" to 1, "version" to 2, "level" to 3'
+  mapField 'STRING_STRING_MAP', 'String', 'String', '"name" to "John", "city" to "New York", "country" to "USA"'
+  mapField 'STRING_BOOLEAN_MAP', 'String', 'Boolean', '"debug" to true, "production" to false, "testing" to true'
+  
+  // 数值类型 Map
+  mapField 'STRING_FLOAT_MAP', 'String', 'Float', '"pi" to 3.14f, "e" to 2.71f, "sqrt2" to 1.41f'
+  mapField 'STRING_DOUBLE_MAP', 'String', 'Double', '"precision_pi" to 3.14159265359, "precision_e" to 2.71828182846'
+  mapField 'STRING_LONG_MAP', 'String', 'Long', '"timestamp1" to 1640995200000L, "timestamp2" to 1640995260000L'
+  
+  // 特殊字符 Map 测试
+  mapField 'SPECIAL_CHAR_MAP', 'String', 'String', '"hello" to "world", "quote" to "He said \\"Hi\\"", "newline" to "Line1\\nLine2"'
+  
+  // 单元素 Map
+  mapField 'SINGLE_ENTRY_MAP', 'String', 'Integer', '"single" to 42'
+  
+  // 复杂键值 Map
+  mapField 'COMPLEX_KEY_MAP', 'String', 'String', '"api_key_v1" to "abc123", "api_key_v2" to "def456", "secret_token" to "xyz789"'
+
+  // ========== 自定义类型和数组测试 ==========
+  field 'CUSTOM_ARRAY', 'String[]', 'new String[]{"item1", "item2", "item3"}', '自定义数组'
+  field 'INT_ARRAY', 'int[]', 'new int[]{10, 20, 30, 40, 50}', '整型数组'
+  field 'BOOLEAN_ARRAY', 'boolean[]', 'new boolean[]{true, false, true, false}', '布尔数组'
+  field 'EMPTY_ARRAY', 'String[]', 'new String[]{}', '空数组测试'
+  
+  // 边界值测试
+  field 'MAX_RETRY_COUNT', 'int', '3', '最大重试次数'
+  field 'MIN_TIMEOUT', 'long', '1000L', '最小超时时间'
+  field 'DEFAULT_BUFFER_SIZE', 'int', '8192', '默认缓冲区大小'
+
+  // ========== 使用字段容器配置复杂场景 ==========
+  fields {
+    // 数据库相关配置
+    create('DATABASE_NAME') {
+      type = 'String'
+      value = '"app_database.db"'
+      comment = '数据库名称'
+    }
+    
+    create('DATABASE_VERSION') {
+      type = 'int'
+      value = 1
+      comment = '数据库版本'
+    }
+    
+    create('TABLE_NAMES') {
+      type = 'List<String>'
+      value = '"users", "products", "orders", "categories"'
+      comment = '数据库表名列表'
+    }
+    
+    // 缓存配置
+    create('CACHE_SIZE') {
+      type = 'int'
+      value = 1024 * 1024 * 10  // 10MB
+      comment = '缓存大小（字节）'
+    }
+    
+    create('CACHE_EXPIRY_MAP') {
+      type = 'Map<String, Long>'
+      value = '"user_cache" to 3600000L, "product_cache" to 1800000L, "temp_cache" to 300000L'
+      comment = '缓存过期时间配置（毫秒）'
+    }
+    
+    // 网络配置
+    create('ENDPOINT_URLS') {
+      type = 'Map<String, String>'
+      value = '"api" to "https://api.example.com", "cdn" to "https://cdn.example.com", "auth" to "https://auth.example.com"'
+      comment = '各种服务端点URL'
+    }
+    
+    create('RETRY_INTERVALS') {
+      type = 'List<Integer>'
+      value = '1000, 2000, 4000, 8000, 16000'
+      comment = '重试间隔时间（毫秒）'
+    }
+    
+    // 功能开关配置
+    create('FEATURE_FLAGS') {
+      type = 'Map<String, Boolean>'
+      value = '"new_ui" to true, "beta_feature" to false, "analytics" to true, "crash_reporting" to true'
+      comment = '功能开关配置'
+    }
+    
+    // 环境配置
+    create('ENVIRONMENT_CONFIG') {
+      type = 'Map<String, String>'
+      value = '"env" to "development", "log_level" to "DEBUG", "region" to "us-east-1"'
+      comment = '环境配置信息'
+    }
+    
+    // 性能配置
+    create('PERFORMANCE_THRESHOLDS') {
+      type = 'Map<String, Double>'
+      value = '"cpu_threshold" to 0.8, "memory_threshold" to 0.9, "network_timeout" to 30.0'
+      comment = '性能阈值配置'
+    }
+  }
+}
+
+dependencies {
+  implementation libs.androidx.annotation
+  implementation libs.androidx.core.ktx
+  implementation libs.androidx.lifecycle.runtime.ktx
+  testImplementation libs.junit
+  androidTestImplementation libs.androidx.junit
+  androidTestImplementation libs.androidx.espresso.core
+}
